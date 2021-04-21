@@ -7,10 +7,10 @@ from datetime import datetime
 
 
 
-PROXIES = {'http': 'http://localhost:8888', 'https':'http://localhost:8888'}
-CERT_VERIFY = False
-# PROXIES = {}
-# CERT_VERIFY = True
+# PROXIES = {'http': 'http://localhost:8888', 'https':'http://localhost:8888'}
+# CERT_VERIFY = False
+PROXIES = {}
+CERT_VERIFY = True
 
 
 def init(ostype, uuid):

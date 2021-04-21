@@ -4,4 +4,6 @@ qwebchannel.js
 qtui.bat
 mzlnmsl.ui
 main.spec
-*.pyc
+/__pycache__
+/build
+/dist
