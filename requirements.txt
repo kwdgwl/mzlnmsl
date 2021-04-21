@@ -1,0 +1,4 @@
+requests==2.25.1
+dnspython==2.1.0
+PyQt5==5.15.4
+pyqtwebengine==5.15.4
