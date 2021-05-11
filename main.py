@@ -157,10 +157,6 @@ def prasePoint(msg):
         map_addp(10+len(route_epnts), route_epnts[len(route_epnts)-1], "orange", "额外点 e" + str(len(route_epnts)-1), "e" + str(len(route_epnts)-1), False)
     return "e"+str(len(route_epnts)-1), route_epnts[len(route_epnts)-1]
 
-
-
-
-
 # Qt Signal
 def qsLogin():
     stat, utoken, userid = network.login(qtwindow.lineEdit_B_username.text(), qtwindow.lineEdit_B_password.text(), qtwindow.lineEdit_A_model.text())
@@ -321,8 +317,21 @@ def qsConfirm():
 
     if route_distance[0] < float(rpResp['data']['length']):
         logging.error("距离不足")
+        qtwindow.label_Z_status.setText("距离不足")
         return
 
+    pointsrequired = [1,2]
+    # required at least 1b+2t points
+    for pnt in route_rawpnts:
+        if(pnt[0]=='b'):
+            pointsrequired[0] -= 1
+        elif(pnt[0]=='t'):
+            pointsrequired[1] -= 1
+     
+    if(pointsrequired[0] > 0 or pointsrequired[1] > 0):
+        logging.error("途径点数量不足")
+        qtwindow.label_Z_status.setText("途径点数量不足")
+        return
 
     mapRespStat = 0
     qtwindow.checkBox_F_hidepoints.setChecked(False)
@@ -331,13 +340,14 @@ def qsConfirm():
     qtwindow.pushButton_Z_logout.setEnabled(False)
     final_route, final_distance = mapapi.generate_path(route_routes)
 
+    if final_distance < float(rpResp['data']['length']):
+        final_distance = float(rpResp['data']['length']) + random.uniform(0.05, 0.1)
 
     # route confirmed, add points to response
     routeData = const.routeData
     respappended = [False, False, False, False, False, False]
-    
-    for i in range(len(route_routes)):
-        map_dell(i)
+
+
     for pnt in route_rawpnts:
         if(pnt[0]=='b'):
             if not respappended[int(pnt[1])]:
@@ -350,6 +360,8 @@ def qsConfirm():
                 map_addp(3+int(pnt[1]), final_tNodes[int(pnt[1])], "green", "途径点 t" + pnt[1], "t" + pnt[1], False, icon="ok")
                 routeData['tNode'].append(final_tNodes[int(pnt[1])])
 
+    for i in range(len(route_routes)):
+        map_dell(i)
     map_addl(0, final_route, "orange")
     # reformat path
     tmp = []
@@ -373,9 +385,8 @@ def qs_finalconfirm():
 
     if float(qtwindow.lineEdit_G_distance.text()) < float(rpResp['data']['length']):
         logging.error("距离不足")
+        qtwindow.label_Z_status.setText("距离不足")
         return
-
-
 
     startTime = datetime.strptime(rpResp['requesttime'], "%Y-%m-%d %H:%M:%S")
 
@@ -489,7 +500,6 @@ def qe_debug():
     else:
         logger.setLevel(logging.INFO)
 
-
 #Qt Classes
 class webchannel(QObject):
     @pyqtSlot(str)
@@ -503,7 +513,6 @@ class waitingThread(QThread):
     def run(self):
         qtDelay()
         self.endSignal.emit()
-
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -578,7 +587,6 @@ except Exception as e:
     logging.warning("若仍要启动, 按任意键继续")
     os.system("pause>nul")
 
-
 logging.info("初始化ui")
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 app = QApplication(sys.argv)
@@ -598,8 +606,5 @@ qtwindow.show()
 main()
 waitingthread = waitingThread()
 waitingthread.endSignal.connect(qtSubmit)
-
-
-
 
 sys.exit(app.exec_())
