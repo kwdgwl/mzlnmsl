@@ -252,8 +252,8 @@ def qsOaStart():
 def qsInitlocRandom():
     global schoolpos
     rndloc={}
-    rndloc['lat']=schoolpos['lat']-0.005
-    rndloc['lng']=schoolpos['lng']-0.005
+    rndloc['lat']=schoolpos['lat']
+    rndloc['lng']=schoolpos['lng']
     rndloc['lat'] += random.uniform(-0.003, 0.003)
     rndloc['lng'] += random.uniform(-0.003, 0.003)
     qtwindow.lineEdit_D_initloc.setText(utils.prasePositionStr(rndloc))

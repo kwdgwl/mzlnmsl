@@ -35,6 +35,7 @@ def get_school_location(school: str):
     school = school.replace(')', '')
     oj = {
         "address": school,
+        'ret_coordtype': 'gcj02ll',
         "output": "json"
     }
     r = requests.get(host + get_sn(url_params(url, oj)))
