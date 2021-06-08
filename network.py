@@ -244,11 +244,11 @@ def rundetail(runid, userid):
     resp = resp.json()
 
     if(resp['msg']==u'查询成功'):
-        logging.info("查询成功")
-        return True
+        logging.info("查询完成, 服务器返回信息:" + resp['data']['runDesc'])
+        return True, resp['data']['runDesc']
     else:
         logging.warning("查询失败, 返回信息:" + resp['msg'])
-        return False
+        return False, ''
 
 def adreport(userid):
     global isiOS

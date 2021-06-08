@@ -438,12 +438,16 @@ def qtDelay():
 def qtSubmit():
     global routeData
     stat, runid = network.saverun(routeData)
+    config.setConfig("resumedata","")
     if stat:
-        config.setConfig("resumedata","")
-        stat = network.rundetail(runid, qtwindow.lineEdit_B_userid.text())
+        stat, msg= network.rundetail(runid, qtwindow.lineEdit_B_userid.text())
         if stat:
-            qtwindow.label_Z_status.setText("提交成功")
+            qtwindow.label_Z_status.setText("提交成功, 查询返回信息:" + msg)
             qtwindow.pushButton_Z_logout.setEnabled(True)
+        else:
+            qtwindow.label_Z_status.setText("提交成功, 查询失败")
+    else:
+        qtwindow.label_Z_status.setText("提交失败")
     
 def qe_type():
     if qtwindow.radioButton_A_ios.isChecked():
