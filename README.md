@@ -4,17 +4,18 @@
 
 使用pyqt进行重构 可以瞎吉尔跑了
 
+### 更新记录
+```
+6.9 2.2a
+安卓版本更新至2.8.8
+顺便改了一点小东西（
+```
+
 ### 使用方法
 ```
 pip install -r requirement.txt
 python main.py config.ini
 ```
 ### 或者: [打包版](https://github.com/kwdgwl/mzlnmsl/releases)
-
-## 注
-
-由于我比较懒 目前途径点需要选中才算经过
-
-为确保安全 提交前请检查一下途径点和数据是否满足要求（
 
 ###### 感谢马正龙贡献的吗吗

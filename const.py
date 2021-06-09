@@ -1,5 +1,5 @@
-version = "麦哲伦没有吗吗 v2.1a"
-versioncheck = "2.1a"
+version = "麦哲伦没有吗吗 v2.2a"
+versioncheck = "2.2a"
 host = 'https://www.sportcampus.cn'
 
 # sign key
@@ -8,10 +8,10 @@ android_headers = {
     'Host': 'www.sportcampus.cn',
     'Accept-Language': 'zh-CN,zh;q=0.8',
     'User-Agent': 'okhttp-okgo/jeasonlzy',
-    'versionName': '2.8.6',
+    'versionName': '2.8.8',
     'platform': 'android',
     'BDA9F42E0C8A294ECDF5CC72AAE6A701': '1,0,0,0,0,0',
-    'versionCode': '442',
+    'versionCode': '444',
     'xxversionxx': '20180601',
     'utoken': '',
     'uuid': '',
