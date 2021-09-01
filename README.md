@@ -6,16 +6,16 @@
 
 ### 更新记录
 ```
-6.9 2.2a
-安卓版本更新至2.8.8
-顺便改了一点小东西（
+2021.09.01
+ios更新 2.2.32
+安卓更新 2.8.9
+添加了自动更新: start.py
 ```
 
-### 使用方法
+### 简易使用方法
 ```
-pip install -r requirement.txt
-python main.py config.ini
+安装python
+双击start.py
 ```
-### 或者: [打包版](https://github.com/kwdgwl/mzlnmsl/releases)
 
 ###### 感谢马正龙贡献的吗吗

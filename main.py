@@ -7,7 +7,6 @@ import uuid
 import base64
 import json 
 import ctypes
-import dns.resolver
 from datetime import datetime, timedelta
 
 from PyQt5.QtWebChannel import QWebChannel
@@ -30,28 +29,6 @@ route_rawpnts = []
 route_distance = []
 
 
-def main():
-    config.init(sys.argv[1])
-    # init config read
-    if config.getConfig("type")=="android":
-        qtwindow.radioButton_A_android.setChecked(True)
-    else:
-        qtwindow.radioButton_A_ios.setChecked(True)
-    qtwindow.lineEdit_A_uuid.setText(config.getConfig("uuid"))
-    qtwindow.lineEdit_A_model.setText(config.getConfig("model"))
-    qtwindow.lineEdit_B_username.setText(config.getConfig("account"))
-    if qtwindow.lineEdit_B_username.text()=="":
-        qtwindow.checkBox_B_saveaccount.setChecked(False)
-    else:
-        qtwindow.checkBox_B_saveaccount.setChecked(True)
-    qtwindow.lineEdit_B_password.setText(config.getConfig("password"))
-    if qtwindow.lineEdit_B_password.text()=="":
-        qtwindow.checkBox_B_savepassword.setChecked(False)
-    else:
-        qtwindow.checkBox_B_savepassword.setChecked(True)
-    qtwindow.lineEdit_B_utoken.setText(config.getConfig("utoken"))
-    qtwindow.lineEdit_B_userid.setText(config.getConfig("userid"))
-    qtwindow.label_Z_status.setText("等待操作: 设置设备信息")
 
 def routeInit():
     global rpResp
@@ -86,7 +63,7 @@ def routeInit():
 
 # Map Operations
 def mapInit(path):
-    qtwindow.browser.setUrl(QUrl(path))
+    qtwindow.browser.setUrl(QUrl(path.replace("\\","/")))
 def mapScript(jscript):
     qtwindow.browser.page().runJavaScript(jscript)
 def map_addp(idx, pos, color, tooltip, resp, follow, fZoom="-1", icon="info-sign"):
@@ -140,6 +117,7 @@ def mapResponse(msg):
         if len(troute)==0:
             logging.warning("路径获取为空, 不添加至路径")
             qsUndo()
+
 def prasePoint(msg):
     global rpResp
     global runinfo
@@ -266,7 +244,7 @@ def qsInitRun():
         qtwindow.pushButton_D_send.setEnabled(False)
         qtwindow.groupBox_E.setEnabled(True)
         mapRespStat = 2
-        qtwindow.label_E_dist.setText(rpResp['data']['length'])
+        qtwindow.label_E_dist.setText(str(rpResp['data']['length']))
         qtwindow.label_E_reqtime.setText(rpResp['requesttime'])
         qtwindow.label_E_initloc.setText(rpResp['initloc'])
         qtwindow.label_E_runid.setText(str(rpResp['data']['runPageId']))
@@ -569,46 +547,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.lineEdit_F_route.setEnabled(False)
         self.lineEdit_G_time.setEnabled(False)
 
-os.system("cls")
-print(const.version + "\n")
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(filename)s:%(lineno)d - [%(levelname)s] %(message)s')
 
-# Update check
-dnsresolver = dns.resolver.Resolver()
-dnsresolver.nameservers = ['dns9.hichina.com', 'dns10.hichina.com', '8.8.8.8']
-try:
-    logging.info("检查麦哲伦的吗吗, 当前版本:" + const.versioncheck)
-    dnsresponse = dnsresolver.resolve('mzlnmsl.xyldomain.top', 'TXT')
-    if dnsresponse[0].strings[0].decode()[:len(const.versioncheck)] == const.versioncheck:
-        logging.info("吗吗版本检查成功")
+if __name__ == '__main__':
+    os.system("cls")
+    print(const.version + "\n")
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(filename)s:%(lineno)d - [%(levelname)s] %(message)s')
+
+
+    logging.info("初始化ui")
+    ctypes.windll.shcore.SetProcessDpiAwareness(0)
+    app = QApplication(sys.argv)
+    qwebchannel = QWebChannel()
+    locchannel = webchannel()
+    qtwindow = MainWindow()
+
+    mappath = os.path.dirname(os.path.abspath(sys.argv[0]))+"\\route.html"
+    logging.debug("地图文件位置:" + mappath)
+    mapInit(mappath)
+    qtwindow.show()
+    if len(sys.argv) > 1:
+        config.init(sys.argv[1])
     else:
-        logging.info("解析返回:" + dnsresponse[0].strings[0].decode())
-        raise Exception("吗吗版本不符")
-except Exception as e:
-    logging.warning("版本检查失败:")
-    logging.warning(str(e))
-    logging.warning("***不建议使用过期版本***")
-    logging.warning("若仍要启动, 按任意键继续")
-    os.system("pause>nul")
+         config.init(os.path.dirname(os.path.abspath(sys.argv[0]))+"\\config.ini")
 
-logging.info("初始化ui")
-ctypes.windll.shcore.SetProcessDpiAwareness(2)
-app = QApplication(sys.argv)
-qwebchannel = QWebChannel()
-locchannel = webchannel()
-qtwindow = MainWindow()
+    # init config read
+    if config.getConfig("type")=="android":
+        qtwindow.radioButton_A_android.setChecked(True)
+    else:
+        qtwindow.radioButton_A_ios.setChecked(True)
+    qtwindow.lineEdit_A_uuid.setText(config.getConfig("uuid"))
+    qtwindow.lineEdit_A_model.setText(config.getConfig("model"))
+    qtwindow.lineEdit_B_username.setText(config.getConfig("account"))
+    if qtwindow.lineEdit_B_username.text()=="":
+        qtwindow.checkBox_B_saveaccount.setChecked(False)
+    else:
+        qtwindow.checkBox_B_saveaccount.setChecked(True)
+    qtwindow.lineEdit_B_password.setText(config.getConfig("password"))
+    if qtwindow.lineEdit_B_password.text()=="":
+        qtwindow.checkBox_B_savepassword.setChecked(False)
+    else:
+        qtwindow.checkBox_B_savepassword.setChecked(True)
+    qtwindow.lineEdit_B_utoken.setText(config.getConfig("utoken"))
+    qtwindow.lineEdit_B_userid.setText(config.getConfig("userid"))
+    qtwindow.label_Z_status.setText("等待操作: 设置设备信息")
 
-if hasattr(sys, 'frozen'):
-    # Handles PyInstaller
-    mappath = "file:///" + os.path.dirname(sys.executable).replace('\\', '/') + "/route.html"
-else: 
-    mappath = "file:///" + os.path.dirname(__file__).replace('\\', '/') + "/route.html"
-logging.debug("地图文件位置:" + mappath)
-mapInit(mappath)
-qtwindow.show()
+    waitingthread = waitingThread()
+    waitingthread.endSignal.connect(qtSubmit)
 
-main()
-waitingthread = waitingThread()
-waitingthread.endSignal.connect(qtSubmit)
-
-sys.exit(app.exec_())
+    sys.exit(app.exec_())

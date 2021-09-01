@@ -1,5 +1,4 @@
-version = "麦哲伦没有吗吗 v2.2a"
-versioncheck = "2.2a"
+version = "麦哲伦没有吗吗 v2.2b"
 host = 'https://www.sportcampus.cn'
 
 # sign key
@@ -8,10 +7,11 @@ android_headers = {
     'Host': 'www.sportcampus.cn',
     'Accept-Language': 'zh-CN,zh;q=0.8',
     'User-Agent': 'okhttp-okgo/jeasonlzy',
-    'versionName': '2.8.8',
+    'packagename': 'com.example.gita.gxty',
+    'versionName': '2.8.9',
     'platform': 'android',
     'BDA9F42E0C8A294ECDF5CC72AAE6A701': '1,0,0,0,0,0',
-    'versionCode': '444',
+    'versionCode': '453',
     'xxversionxx': '20180601',
     'utoken': '',
     'uuid': '',
@@ -26,12 +26,12 @@ ios_headers = {
     'Accept': '*/*',
     'Accept-Language': 'zh-Hans-CN;q=1',
     'Accept-Encoding': 'gzip, deflate, br',
-    'versionName': '2.2.30',
+    'versionName': '2.2.32',
     'xxversionxx': '20180601',
     'platform': 'iOS',
     # 'Content-Length': '',
-    'versionCode': '401',
-    'User-Agent': 'CollegeSports2/2.2.30 (iPhone; iOS 14.4.2; Scale/3.00)',
+    'versionCode': '402',
+    'User-Agent': 'CollegeSports2/2.2.32 (iPhone; iOS 14.7.1; Scale/2.00)',
     'Connection': 'Keep-Alive',
     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     # 'Cookie': '',
