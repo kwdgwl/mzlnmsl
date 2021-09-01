@@ -1,9 +1,5 @@
-
-rebuild.bat
+server.py
 qwebchannel.js
 qtui.bat
 mzlnmsl.ui
-main.spec
 /__pycache__
-/build
-/dist
