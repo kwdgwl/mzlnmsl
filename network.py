@@ -6,6 +6,7 @@ import json
 from datetime import datetime
 
 
+
 # PROXIES = {'http': 'http://localhost:8888', 'https':'http://localhost:8888'}
 # CERT_VERIFY = False
 PROXIES = {}
@@ -121,7 +122,7 @@ def userinfo(utoken, userid):
         misc(4)
         misc(3)
         misc(1)
-        misc(0)
+        # misc(0)
 
         return True, resp['data']['username'], resp['data']['school'],  str(resp['data']['effectiveTimes']),  str(resp['data']['targetTotalTimes'])
     else:
@@ -172,7 +173,7 @@ def startrun(initloc, userid):
     logging.info("跑步开始请求")
 
     ses_data = json.dumps(
-        {"initLocation": initloc, "type": "1", "userid": userid}, separators=(',', ':'))
+        {"userid": userid, "type": 1, "initLocation": initloc}, separators=(',', ':'))
     ses_sign = sign(ses_data)
 
     ses_params = {'data': ses_data, 'sign': ses_sign}
@@ -187,14 +188,17 @@ def startrun(initloc, userid):
                            headers=headers, proxies=PROXIES, verify=CERT_VERIFY)
         headers.pop('ntoken')
     resp = resp.json()
-
-    if(resp['msg'] == u'获取成功'):
-        logging.info('获取成功, runPageId:' + str(resp['data']['runPageId']))
-        resp['requesttime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        resp['initloc'] = initloc
-        return True, resp
-    else:
-        logging.warning('获取失败, 返回信息:' + resp['msg'])
+    try:
+        if(resp['msg'] == u'获取成功'):
+            logging.info('获取成功, runPageId:' + str(resp['data']['runPageId']))
+            resp['requesttime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            resp['initloc'] = initloc
+            return True, resp
+        else:
+            logging.warning('获取失败, 返回信息:' + resp['msg'])
+            return False, {}
+    except:
+        logging.warning('获取失败: ' + str(resp))
         return False, {}
 
 
@@ -347,10 +351,10 @@ def misc(index):
     # 2 apiconfig
     # 3 bjcallback
     # 4 discoveryinit
-    misc_name = ["adsList", "toastIndex5", "apiConfig",
+    misc_name = ["adsList", "toastIndex1", "apiConfig",
                  "bjCallback", "discovery/init(Android Only)"]
-    misc_url = ['/api/art/adsList', '/api/Toast/get_index/5',
-                '/index.php/api/configuration/apiConfig', '/api/reg/bjCallback', '/api/discovery/init']
+    misc_url = ['/api/art/adsList', '/api/Toast/get_index/1',
+                '/index.php/api/configuration/apiConfig', '/index.php/api/reg/bjCallback', '/api/discovery/init']
     misc_data = [{}, {}, {}, {}, {}]
     misc_method = [['POST', 'GET'], ['POST', 'GET'], [
         'GET', 'GET'], ['GET', 'POST'], ['FUCK', 'GET']]

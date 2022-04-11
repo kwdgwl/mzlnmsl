@@ -1,4 +1,4 @@
-version = "麦哲伦没有吗吗 v2.2b"
+version = "麦哲伦没有吗吗 v2.4a"
 host = 'https://www.sportcampus.cn'
 
 # sign key
@@ -26,13 +26,13 @@ ios_headers = {
     'Accept': '*/*',
     'Accept-Language': 'zh-Hans-CN;q=1',
     'Accept-Encoding': 'gzip, deflate, br',
-    'versionName': '2.2.32',
+    'versionName': '2.2.39',
     'xxversionxx': '20180601',
     'platform': 'iOS',
     # 'Content-Length': '',
-    'versionCode': '402',
-    'User-Agent': 'CollegeSports2/2.2.32 (iPhone; iOS 14.7.1; Scale/2.00)',
-    'Connection': 'Keep-Alive',
+    'versionCode': '409',
+    'User-Agent': 'CollegeSports2/2.2.39 (iPhone; iOS 15.3; Scale/2.00)',
+    'Connection': 'keep-alive',
     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     # 'Cookie': '',
 }
@@ -42,16 +42,16 @@ routeData = {
     'buPin': '0.0',
     'duration': '919',
     'endTime': '2021-03-22 18:57:07',
-    'frombp': '1',
+    'frombp': 0,
     'goal': '2.00',
     'real': '2295.1213',
     'runPageId': '32632461',
-    'speed': "06'39''",
+    'speed': "06'39\"",
     'startTime': '2021-03-22 18:38:16',
     'tNode': [],
-    'totalNum': '0',
+    'totalNum': 0,
     'track': [], 
     'trend': [], 
-    'type': '1',
+    'type': 1,
     'userid': '373657', 
 }

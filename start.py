@@ -60,6 +60,12 @@ if __name__ == '__main__':
     except Exception as e:
         print(f"更新时发生错误: {e}")
 
+    if sys.version[:4] == '3.10':
+        print("***")
+        print("注意: 你正在使用Python 3.10, 此程序可能无法正常运行")
+        print("***")
+        os.system('pause')
+    
     print("检查requirements...")
     time.sleep(1)
     os.system(reqcommand)

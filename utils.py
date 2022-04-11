@@ -18,8 +18,8 @@ def prasePositionStr(inputd, invert=False):
             lat = float(inputd['latitude'])
     if lng < lat or invert:
         if not(lng < lat and invert):
-            return str(lat) + "," + str(lng)
-    return str(lng) + "," + str(lat)
+            return f"{lat:.6f},{lng:.6f}"
+    return f"{lng:.6f},{lat:.6f}"
     
 def prasePositionObj(inputd):
     if type(inputd)==type("NMSL"):

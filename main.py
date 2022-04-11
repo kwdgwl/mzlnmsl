@@ -145,12 +145,15 @@ def qsLogin():
     if stat:
         config.setConfig("resumedata","")
         qsSesLogin()
+    else:
+        qtwindow.label_Z_status.setText("登录失败, 详见log")
 def qsSesLogin():
     global mapRespStat
     global rpResp
     global schoolpos
     if len(qtwindow.lineEdit_B_utoken.text()) != 32:
         logging.error("utoken填写不正确")
+        qtwindow.label_Z_status.setText("utoken不正确")
         return
     stat, name, school, completed, target = network.userinfo(qtwindow.lineEdit_B_utoken.text(), qtwindow.lineEdit_B_userid.text())
     if stat:
@@ -187,6 +190,7 @@ def qsSesLogin():
         qtwindow.lineEdit_B_userid.setText("")
         qe_utoken()
         qe_userid()
+        qtwindow.label_Z_status.setText("登录失败, 详见log")
 def qsLogout():
     global mapRespStat
     stat = network.logout(qtwindow.lineEdit_B_userid.text())
@@ -216,11 +220,15 @@ def qsOaStart():
     if qtwindow.radioButton_A_ios.isChecked():
         if len(qtwindow.lineEdit_A_uuid.text()) != 54:
             logging.error("uuid填写不正确")
+            qtwindow.label_Z_status.setText("uuid不正确")
             return
         network.init("iOS", qtwindow.lineEdit_A_uuid.text())
     else:
+        qtwindow.label_Z_status.setText("请使用iOS")
+        return
         if len(qtwindow.lineEdit_A_uuid.text()) != 32:
             logging.error("uuid填写不正确")
+            qtwindow.label_Z_status.setText("uuid不正确")
             return
         network.init("android", qtwindow.lineEdit_A_uuid.text())
     qtwindow.groupBox_A.setEnabled(False)
@@ -252,6 +260,8 @@ def qsInitRun():
         qtwindow.label_Z_status.setText("等待操作: 点击地图选择途径点")
         qtwindow.groupBox_F.setEnabled(True)
         routeInit()
+    else:
+        qtwindow.label_Z_status.setText("跑步开始请求出错, 详见log")
 def qsTrash():
     global mapRespStat
     map_clear()
@@ -351,9 +361,9 @@ def qsConfirm():
     qtwindow.groupBox_G.setEnabled(True)
     qtwindow.label_G_starttime.setText(rpResp['requesttime'])
     qtwindow.lineEdit_G_speed.setText(str(random.randint(300,360)))
-    qtwindow.lineEdit_G_distance.setText(str(format(final_distance, '.8f')))
-    qtwindow.lineEdit_G_bupin.setText(str(format(random.uniform(120, 140), '.1f')))
-    qtwindow.lineEdit_G_bushu.setText(str(random.randint(1800,2300)))
+    qtwindow.lineEdit_G_distance.setText(str(format(final_distance, '.6f')))
+    qtwindow.lineEdit_G_bupin.setText(str(random.randint(120,240)))
+    qtwindow.lineEdit_G_bushu.setText(str(random.randint(1700,2300)))
     qe_duration()
     qtwindow.label_Z_status.setText("等待操作: 确认提交数据")
 
@@ -369,18 +379,19 @@ def qs_finalconfirm():
     startTime = datetime.strptime(rpResp['requesttime'], "%Y-%m-%d %H:%M:%S")
 
     # gen trend
-    trendy = ["50.566666","100.86667","100.2","50.266666","100.28333","100.816666","50.283333","50.46667","101.666664","101.65","100.53333","50.6","49.983334","50.05","50.583332"]
-    trend = []
-    for i in range(0,23):
-        trend.append({'x': str((i+1)/10), 'y': trendy[random.randint(0, 14)]})
+    # trendy = ["50.566666","100.86667","100.2","50.266666","100.28333","100.816666","50.283333","50.46667","101.666664","101.65","100.53333","50.6","49.983334","50.05","50.583332"]
+    # trend = []
+    # for i in range(0,23):
+    #     trend.append({'x': str((i+1)/10), 'y': trendy[random.randint(0, 14)]})
+    trend = [{'x':'0','y':'0'},{'x':'2','y':'0.5'},{'x':'4','y':'1.0'},{'x':'6','y':'1.5'},{'x':'8','y':'2.0'}]
 
     dis = float(qtwindow.lineEdit_G_distance.text())
     speed = int(qtwindow.lineEdit_G_speed.text())
-    bupin = float(qtwindow.lineEdit_G_bupin.text())
+    bupin = int(qtwindow.lineEdit_G_bupin.text())
     bushu = int(qtwindow.lineEdit_G_bushu.text())
 
     duration = int(dis * speed)  # seconds
-    speed = "%s'%s''" % (speed // 60, speed - speed // 60 * 60)
+    speed = "%s'%s\"" % (speed // 60, speed - speed // 60 * 60)
     qtwindow.lineEdit_G_speed.setText(speed)
     
     endTime = (startTime + timedelta(seconds=duration)).strftime("%Y-%m-%d %H:%M:%S")
@@ -391,14 +402,14 @@ def qs_finalconfirm():
     routeData['endTime'] = endTime
     routeData['startTime'] = startTime.strftime("%Y-%m-%d %H:%M:%S")
     routeData['userid'] = qtwindow.lineEdit_B_userid.text()
-    routeData['runPageId'] = rpResp['data']['runPageId']
-    routeData['real'] = str('%.4f'% (dis*1000))
+    routeData['runPageId'] = str(rpResp['data']['runPageId'])
+    routeData['real'] = str('%.2f'% (dis*1000))
     routeData['duration'] = str(duration)
     routeData['speed'] = speed
     # routeData['track'] = path
     routeData['trend'] = trend
-    routeData['buPin'] = '%.1f' % bupin
-    routeData['totalNum'] = "%d" % bushu
+    routeData['buPin'] = str(bupin)
+    routeData['totalNum'] = bushu
     qtwindow.groupBox_G.setEnabled(False)
     waitingthread.start()
 
@@ -555,7 +566,7 @@ if __name__ == '__main__':
 
 
     logging.info("初始化ui")
-    ctypes.windll.shcore.SetProcessDpiAwareness(0)
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
     app = QApplication(sys.argv)
     qwebchannel = QWebChannel()
     locchannel = webchannel()
